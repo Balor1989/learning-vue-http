@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <form class="card" @submit.prevent="createPerson">
-      <h1>Hello</h1>
+      <h1>People list</h1>
 
       <div class="form-control">
         <label for="name"> Введите имя</label>
@@ -10,15 +10,21 @@
 
       <button class="btn primary" :disabled="!name.length">Создать</button>
     </form>
+    <div class="card">
+      <PeopleList :people="people" @load="loadPeople" />
+    </div>
   </div>
 </template>
 
 <script>
+import PeopleList from "./components/PeopleList";
 export default {
+  components: { PeopleList },
   data() {
     return {
       name: "",
       url: "https://learning-vue-http-8cd67-default-rtdb.asia-southeast1.firebasedatabase.app/people.json",
+      people: [],
     };
   },
   methods: {
@@ -39,6 +45,16 @@ export default {
       } catch (error) {
         console.log(error.message);
       }
+    },
+    async loadPeople() {
+      const response = await fetch(this.url);
+      const data = await response.json();
+      this.people = Object.keys(data).map((key) => {
+        return {
+          id: key,
+          firstName: data[key].firstName,
+        };
+      });
     },
   },
 };
