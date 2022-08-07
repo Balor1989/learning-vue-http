@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <ErrorIndicator :error="error" @close="error = null" />
     <form class="card" @submit.prevent="createPerson">
       <h1>People list</h1>
 
@@ -18,13 +19,15 @@
 
 <script>
 import PeopleList from "./components/PeopleList";
+import ErrorIndicator from "./components/ErrorIndicator";
 export default {
-  components: { PeopleList },
+  components: { PeopleList, ErrorIndicator },
   data() {
     return {
       name: "",
       url: "https://learning-vue-http-8cd67-default-rtdb.asia-southeast1.firebasedatabase.app/people.json",
       people: [],
+      error: null,
     };
   },
   mounted() {
@@ -54,14 +57,22 @@ export default {
       }
     },
     async loadPeople() {
-      const response = await fetch(this.url);
-      const data = await response.json();
-      this.people = Object.keys(data).map((key) => {
-        return {
-          id: key,
-          firstName: data[key].firstName,
+      try {
+        const response = await fetch(this.url);
+        const data = await response.json();
+        this.people = Object.keys(data).map((key) => {
+          return {
+            id: key,
+            firstName: data[key].firstName,
+          };
+        });
+      } catch (error) {
+        this.error = {
+          type: "danger",
+          title: "Error",
+          text: error.message,
         };
-      });
+      }
     },
     async deletePerson(id) {
       await fetch(
