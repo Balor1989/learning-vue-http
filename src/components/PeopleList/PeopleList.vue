@@ -1,8 +1,9 @@
 <template>
   <div v-if="people.length">
     <ul class="card">
-      <li v-for="{ id, firstName } in people" :key="id">
+      <li class="item" v-for="{ id, firstName } in people" :key="id">
         First Name : {{ firstName }}
+        <button class="btn danger" @click="$emit('delete', id)">Delete</button>
       </li>
     </ul>
   </div>
@@ -14,7 +15,7 @@
 
 <script>
 export default {
-  emits: ["load"],
+  emits: ["load", "delete"],
   props: ["people"],
 };
 </script>
@@ -22,5 +23,9 @@ export default {
 <style>
 ul {
   list-style: none;
+}
+.item {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

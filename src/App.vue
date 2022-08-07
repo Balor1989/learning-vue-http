@@ -11,7 +11,7 @@
       <button class="btn primary" :disabled="!name.length">Создать</button>
     </form>
     <div class="card">
-      <PeopleList :people="people" @load="loadPeople" />
+      <PeopleList :people="people" @load="loadPeople" @delete="deletePerson" />
     </div>
   </div>
 </template>
@@ -27,6 +27,9 @@ export default {
       people: [],
     };
   },
+  mounted() {
+    this.loadPeople();
+  },
   methods: {
     async createPerson() {
       try {
@@ -40,7 +43,11 @@ export default {
           }),
         });
         const data = await response.json();
-        console.log(data);
+        this.people.push({
+          firstName: this.name,
+          id: data.name,
+        });
+
         this.name = "";
       } catch (error) {
         console.log(error.message);
@@ -55,6 +62,13 @@ export default {
           firstName: data[key].firstName,
         };
       });
+    },
+    async deletePerson(id) {
+      await fetch(
+        `https://learning-vue-http-8cd67-default-rtdb.asia-southeast1.firebasedatabase.app/people/${id}.json`,
+        { method: "DELETE" }
+      );
+      this.people = this.people.filter((person) => person.id !== id);
     },
   },
 };
