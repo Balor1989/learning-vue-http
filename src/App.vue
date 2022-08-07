@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <ErrorIndicator :error="error" @close="error = null" />
     <form class="card" @submit.prevent="createPerson">
       <h1>People list</h1>
 
@@ -11,8 +10,20 @@
 
       <button class="btn primary" :disabled="!name.length">Создать</button>
     </form>
-    <div class="card">
-      <PeopleList :people="people" @load="loadPeople" @delete="deletePerson" />
+    <div v-if="loading">
+      <AppLoader />
+    </div>
+    <div v-else>
+      <div class="card" v-if="!error">
+        <PeopleList
+          :people="people"
+          @load="loadPeople"
+          @delete="deletePerson"
+        />
+      </div>
+      <div class="card" v-else>
+        <ErrorIndicator :error="error" @close="error = null" />
+      </div>
     </div>
   </div>
 </template>
@@ -20,14 +31,16 @@
 <script>
 import PeopleList from "./components/PeopleList";
 import ErrorIndicator from "./components/ErrorIndicator";
+import AppLoader from "./components/Loader";
 export default {
-  components: { PeopleList, ErrorIndicator },
+  components: { PeopleList, ErrorIndicator, AppLoader },
   data() {
     return {
       name: "",
       url: "https://learning-vue-http-8cd67-default-rtdb.asia-southeast1.firebasedatabase.app/people.json",
       people: [],
       error: null,
+      loading: false,
     };
   },
   mounted() {
@@ -58,14 +71,20 @@ export default {
     },
     async loadPeople() {
       try {
+        this.loading = true;
         const response = await fetch(this.url);
         const data = await response.json();
+        if (!data) {
+          this.loading = false;
+          throw new Error("Список людей пуст");
+        }
         this.people = Object.keys(data).map((key) => {
           return {
             id: key,
             firstName: data[key].firstName,
           };
         });
+        this.loading = false;
       } catch (error) {
         this.error = {
           type: "danger",
