@@ -86,6 +86,7 @@ export default {
         });
         this.loading = false;
       } catch (error) {
+        this.loading = false;
         this.error = {
           type: "danger",
           title: "Error",
