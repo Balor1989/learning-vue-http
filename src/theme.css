@@ -221,7 +221,8 @@ h3 {
   padding: 0.5rem 0;
 }
 
-.error {
+.error,
+.alert {
   padding: 1rem 1.5rem;
   border-left-width: 0.5rem;
   border-left-style: solid;
@@ -231,27 +232,32 @@ h3 {
   border-top-right-radius: 2px;
 }
 
-.error.primary {
+.error.primary,
+.alert.primary {
   border-color: #42b983;
   background-color: #f8f8f8;
 }
 
-.error.danger {
+.error.danger,
+.alert.danger {
   border-color: #e53935;
   background-color: #f8f8f8;
 }
 
-.error.warning {
+.error.warning,
+.alert.warning {
   border-color: #c25205;
   background-color: #f8f8f8;
 }
 
-.error p {
+.error p,
+.alert p {
   color: #222;
   line-height: 1.7;
 }
 
-.error-title {
+.error-title,
+.alert-title {
   text-transform: uppercase;
   font-weight: 600;
   margin-bottom: -0.4rem;
