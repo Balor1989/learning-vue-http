@@ -10,7 +10,9 @@
       @close="alert = false"
     />
     <div class="card">
-      <button class="btn primary" @click="alert = true">Show message</button>
+      <button class="btn primary" @click="alert = !alert">
+        {{ alert ? "hide " : "show" }}
+      </button>
     </div>
   </div>
 </template>
