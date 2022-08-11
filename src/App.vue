@@ -22,7 +22,13 @@
       <h2>{{ $1bb("app.title") }}</h2>
       <button class="btn" @click="changeLang">change language</button>
       <button class="btn" @click="$alert('Warning!')">Alert</button>
+      <button v-if="!modal" class="btn primary" @click="modal = !modal">
+        show modal
+      </button>
     </div>
+    <teleport to="#modal">
+      <AppModal v-if="modal" @close="modal = false" />
+    </teleport>
   </div>
 </template>
 
@@ -30,6 +36,7 @@
 import AppBlock from "./components/AppBlock";
 import focusDirective from "./directives/focusDirective";
 import colorDirective from "./directives/colorDirective";
+import AppModal from "./components/AppModal";
 export default {
   inject: ["changeLanguage"],
   data() {
@@ -37,6 +44,7 @@ export default {
       myColor: "green",
       type: "color",
       lang: "en",
+      modal: false,
     };
   },
   methods: {
@@ -54,6 +62,7 @@ export default {
   },
   components: {
     AppBlock,
+    AppModal,
   },
   directives: {
     focus: focusDirective,
