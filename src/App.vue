@@ -17,6 +17,12 @@
       <label for="test"> test</label>
       <input type="text" id="text" v-focus />
     </form>
+    <div class="card">
+      <h2>Plugins</h2>
+      <h2>{{ $1bb("app.title") }}</h2>
+      <button class="btn" @click="changeLang">change language</button>
+      <button class="btn" @click="$alert('Warning!')">Alert</button>
+    </div>
   </div>
 </template>
 
@@ -25,11 +31,26 @@ import AppBlock from "./components/AppBlock";
 import focusDirective from "./directives/focusDirective";
 import colorDirective from "./directives/colorDirective";
 export default {
+  inject: ["changeLanguage"],
   data() {
     return {
       myColor: "green",
       type: "color",
+      lang: "en",
     };
+  },
+  methods: {
+    changeLang() {
+      if (this.lang === "en") {
+        this.changeLanguage("ru");
+        this.$forceUpdate();
+        this.lang = "ru";
+        return;
+      }
+      this.changeLanguage("en");
+      this.$forceUpdate();
+      this.lang = "en";
+    },
   },
   components: {
     AppBlock,
